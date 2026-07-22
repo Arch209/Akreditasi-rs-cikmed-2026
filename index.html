@@ -13,7 +13,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- Top Navigation Bar -->
+    <!-- Header Navigation -->
     <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-3">
@@ -24,14 +24,13 @@
                 </div>
             </div>
             
-            <!-- Quick Links -->
             <div class="flex items-center space-x-2">
-                <a href="https://drive.google.com/drive/folders/1JedelrKSivyCPL9VOXL5_RhdshK-pYGp?usp=sharing" target="_blank" 
+                <a href="https://drive.google.com/drive/folders/1YlyRjAhfb1ieWM8HVGqwHaFK4XXOF6sv?usp=drive_link" target="_blank" 
                    class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center space-x-2 transition border border-emerald-600">
                     <i class="fa-brands fa-google-drive text-emerald-300 text-sm"></i>
                     <span class="hidden md:inline">Google Drive</span>
                 </a>
-                <a href="https://docs.google.com/spreadsheets/d/103vMd8N3jkzlnOLlNNXXHZKNla8l2OCRRNJywekHm_c/edit?gid=1066104956#gid=1066104956" target="_blank" 
+                <a href="https://docs.google.com/spreadsheets/d/1jTJSEpTLQ4tQ2ZE8maDW0AapFlpNn72dxZmBiLudTSM/edit?usp=drive_link" target="_blank" 
                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center space-x-2 transition">
                     <i class="fa-regular fa-file-excel text-emerald-200 text-sm"></i>
                     <span class="hidden md:inline">Spreadsheet</span>
@@ -55,7 +54,6 @@
                 </div>
             </div>
 
-            <!-- Grafik / Chart Kesiapan Pokja -->
             <div class="w-full h-64 md:h-72">
                 <canvas id="pokjaChart"></canvas>
             </div>
@@ -66,10 +64,9 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
                 <div>
                     <h3 class="text-base md:text-lg font-bold text-slate-900">Detail Elemen Penilaian (EP)</h3>
-                    <p class="text-xs text-slate-500">Lihat dan perbarui tautan berkas serta skor penilaian</p>
+                    <p class="text-xs text-slate-500">Lihat, upload dokumen, serta update penanggung jawab & skor</p>
                 </div>
                 
-                <!-- Selector Pokja -->
                 <div class="flex items-center space-x-2 w-full sm:w-auto">
                     <label for="pokjaSelect" class="text-xs font-bold text-slate-500 uppercase flex-shrink-0">Pokja:</label>
                     <select id="pokjaSelect" class="bg-slate-50 border border-slate-300 text-slate-800 text-sm rounded-xl p-2.5 font-bold focus:ring-emerald-500 focus:border-emerald-500 w-full sm:w-64 cursor-pointer">
@@ -100,16 +97,17 @@
                             <th class="px-4 py-3">Standar</th>
                             <th class="px-3 py-3 text-center">No</th>
                             <th class="px-3 py-3 text-center">Metode</th>
-                            <th class="px-6 py-3 min-w-[280px]">Elemen Penilaian (EP)</th>
-                            <th class="px-4 py-3 text-center">Dokumen</th>
+                            <th class="px-6 py-3 min-w-[300px]">Elemen Penilaian (EP)</th>
+                            <th class="px-4 py-3 min-w-[150px]">Penanggung Jawab</th>
+                            <th class="px-4 py-3 text-center min-w-[140px]">Dokumen</th>
                             <th class="px-4 py-3 text-center">Skor</th>
-                            <th class="px-4 py-3">Catatan</th>
+                            <th class="px-4 py-3 min-w-[150px]">Catatan</th>
                             <th class="px-3 py-3 text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="epTableBody" class="divide-y divide-slate-200">
                         <tr>
-                            <td colspan="8" class="text-center py-8 text-xs text-slate-400">
+                            <td colspan="9" class="text-center py-8 text-xs text-slate-400">
                                 <i class="fa-solid fa-spinner fa-spin text-lg text-emerald-600 mb-2 block"></i>
                                 Memuat data Elemen Penilaian...
                             </td>
@@ -121,19 +119,59 @@
 
     </main>
 
-    <!-- Modal Form Edit EP -->
-    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4">
+    <!-- Modal Form Edit & Upload Multiple EP Files -->
+    <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-4 my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                <h4 class="font-bold text-slate-900" id="modalTitle">Edit Data EP</h4>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-base" id="modalTitle">Edit & Upload Dokumen EP</h4>
+                    <p class="text-[11px] text-emerald-600 font-semibold" id="modalSubTitle">-</p>
+                </div>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
+            
             <form id="editForm" onsubmit="submitForm(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="editRowIndex">
+                <input type="hidden" id="editStandar">
+                <input type="hidden" id="editNoUrut">
+                <input type="hidden" id="editRowIndex">
+                <input type="hidden" id="editPokja"> <!-- <--- Tambahkan ini -->
+
+                
+                <!-- PENANGGUNG JAWAB (MULTI-LINE) -->
                 <div>
-                    <label class="font-bold text-slate-700 block mb-1">Link Dokumen / Google Drive</label>
-                    <input type="url" id="editLinkDoc" placeholder="https://drive.google.com/..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                    <label class="font-bold text-slate-700 block mb-1">Penanggung Jawab (PJ)</label>
+                    <textarea id="editPJ" rows="2" placeholder="Nama / Jabatan PJ (Tekan Enter untuk baris baru)..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed"></textarea>
                 </div>
+
+                <!-- LIST FILE YANG SUDAH TER-UPLOAD DI FOLDER EP -->
+                <div class="space-y-1.5">
+                    <label class="font-bold text-slate-700 block">Daftar Berkas Ter-upload di Folder EP</label>
+                    <div id="fileListContainer" class="bg-slate-50 rounded-xl p-3 border border-slate-200 max-h-40 overflow-y-auto divide-y divide-slate-100">
+                        <div class="text-center py-3 text-slate-400">
+                            <i class="fa-solid fa-spinner fa-spin mr-1"></i> Memeriksa folder EP...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UPLOAD BANYAK FILE SEKALIGUS (MULTIPLE) -->
+                <div class="bg-emerald-50/50 p-3 rounded-xl border border-dashed border-emerald-300 space-y-2">
+                    <label class="font-bold text-emerald-800 block">Tambah / Upload File Baru</label>
+                    <input type="file" id="fileInput" multiple class="w-full text-slate-500 text-xs file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                    <p class="text-[10px] text-slate-500">*Bisa pilih lebih dari 1 file sekaligus (Ctrl + Click).</p>
+                </div>
+
+                <!-- LINK FOLDER DRIVE MANUAL -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="font-bold text-slate-700 block">Link Folder Google Drive</label>
+                        <button type="button" id="btnCopyModalLink" onclick="copyLinkFromModal()" class="text-emerald-600 hover:underline text-[11px] font-bold hidden">
+                            <i class="fa-regular fa-copy"></i> Salin Link Folder
+                        </button>
+                    </div>
+                    <input type="url" id="editLinkDoc" placeholder="Link folder otomatis terisi..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500">
+                </div>
+
                 <div>
                     <label class="font-bold text-slate-700 block mb-1">Skor Penilaian</label>
                     <select id="editSkor" class="w-full p-2.5 rounded-lg border border-slate-300 font-semibold">
@@ -142,32 +180,34 @@
                         <option value="10">10 - Terpenuhi Lengkap</option>
                     </select>
                 </div>
+
                 <div>
-                    <label class="font-bold text-slate-700 block mb-1">Catatan</label>
-                    <textarea id="editCatatan" rows="3" placeholder="Masukkan catatan kelengkapan..." class="w-full p-2.5 rounded-lg border border-slate-300"></textarea>
+                    <label class="font-bold text-slate-700 block mb-1">Catatan Kelengkapan</label>
+                    <textarea id="editCatatan" rows="2" placeholder="Masukkan catatan kelengkapan..." class="w-full p-2.5 rounded-lg border border-slate-300"></textarea>
                 </div>
-                <div class="flex justify-end space-x-2 pt-2">
+
+                <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200">Batal</button>
-                    <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700">Simpan Perubahan</button>
+                    <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center space-x-2">
+                        <span>Simpan Perubahan</span>
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="text-center py-4 border-t border-slate-200 text-xs text-slate-400 w-full bg-white">
         &copy; 2026 IT RS Cikarang Medika. All Rights Reserved.
     </footer>
 
     <!-- SCRIPT LOGIC -->
     <script>
-        // TEMPELKAN URL APPS SCRIPT SAYA YANG SUDAH DI-DEPLOY DI SINI
-        const API_URL = "https://script.google.com/macros/s/AKfycbyeKtVsuCl8iDCJeLddwSVC8YKLgZaT3suwsdCIU_2SzhmnSCRj944BqsFdimYj-L2XCA/exec";
+        // PENTING: Ganti URL di bawah ini dengan URL Web App Apps Script milikmu yang terbaru
+        const API_URL = "https://script.google.com/macros/s/AKfycbzf71uIPLgjfhtm4GTHYSyDi1ifWpIezoyfkZuMgVu1CiGglVqHQNNRrZLePQJfBzvZyw/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
 
-        // Inisialisasi Chart.js
         document.addEventListener("DOMContentLoaded", () => {
             const ctx = document.getElementById('pokjaChart').getContext('2d');
             pokjaChart = new Chart(ctx, {
@@ -198,7 +238,6 @@
             loadPokja("TKRS");
         });
 
-        // 1. Ambil Data Dashboard (Chart)
         async function loadDashboard() {
             try {
                 const res = await fetch(`${API_URL}?action=getDashboard`);
@@ -209,7 +248,6 @@
                     pokjaChart.data.datasets[0].data = percentages;
                     pokjaChart.update();
 
-                    // Rata-rata keseluruhan
                     const total = percentages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
                     const avg = (total / percentages.length).toFixed(1);
                     document.getElementById('totalPercentage').innerText = `${avg}%`;
@@ -219,10 +257,23 @@
             }
         }
 
-        // 2. Ambil Data Pokja & Tampilkan di Tabel
         async function loadPokja(pokjaName) {
             const tbody = document.getElementById('epTableBody');
-            tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-xs text-slate-400"><i class="fa-solid fa-spinner fa-spin text-lg text-emerald-600 mb-2 block"></i>Memuat data ${pokjaName}...</td></tr>`;
+            
+            // Animasi Skeleton Loading Modern
+            tbody.innerHTML = Array(4).fill(0).map(() => `
+                <tr class="animate-pulse border-b border-slate-100">
+                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
+                    <td class="px-3 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-6 mx-auto"></div></td>
+                    <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-8 mx-auto"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div><div class="h-3 bg-slate-100 rounded w-3/4"></div></td>
+                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                    <td class="px-4 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-16 mx-auto"></div></td>
+                    <td class="px-4 py-4 text-center"><div class="h-6 bg-slate-200 rounded-full w-8 mx-auto"></div></td>
+                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
+                    <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-5 mx-auto"></div></td>
+                </tr>
+            `).join('');
 
             try {
                 const res = await fetch(`${API_URL}?action=getPokja&pokja=${pokjaName}`);
@@ -231,7 +282,7 @@
                 tbody.innerHTML = '';
                 
                 if (!Array.isArray(currentPokjaData) || currentPokjaData.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-xs text-slate-400">Belum ada data pada Pokja ini.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-xs text-slate-400">Belum ada data pada Pokja ini.</td></tr>`;
                     return;
                 }
 
@@ -240,90 +291,250 @@
                     const noUrut = row[1];
                     const metode = row[2];
                     const epText = row[3];
+                    const pjText = row[4];
                     const linkDoc = row[6];
                     const skor = row[7];
                     const catatan = row[8];
 
                     if (epText) {
-    const tr = document.createElement('tr');
-    tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
-    tr.innerHTML = `
-        <td class="px-4 py-4 font-bold text-slate-900 text-sm md:text-base">${standar || '-'}</td>
-        <td class="px-3 py-4 text-center font-bold text-sm md:text-base">${noUrut || '-'}</td>
-        <td class="px-3 py-4 text-center">
-            <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded border border-blue-200">${metode || '-'}</span>
-        </td>
-        
-        <!-- TEKS ELEMEN PENILAIAN (DIBESARKAN DI SINI) -->
-        <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[320px]">${epText}</td>
-        
-        <td class="px-4 py-4 text-center">
-            ${linkDoc ? `<a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline"><i class="fa-solid fa-file-arrow-up"></i><span>Lihat</span></a>` : `<span class="text-slate-300 text-xs">-</span>`}
-        </td>
-        <td class="px-4 py-4 text-center">
-            <span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm ${skor == 10 ? 'bg-emerald-100 text-emerald-800' : skor == 5 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">${skor !== "" ? skor : 0}</span>
-        </td>
-        <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
-        <td class="px-3 py-4 text-center">
-            <button onclick="openModal(${idx + 6}, '${linkDoc}', '${skor}', '${catatan}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit Baris Ini">
-                <i class="fa-solid fa-pen-to-square"></i>
-            </button>
-        </td>
-    `;
-    tbody.appendChild(tr);
-}
+                        const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
+
+                        const tr = document.createElement('tr');
+                        tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                        tr.innerHTML = `
+                            <td class="px-4 py-4 font-bold text-slate-900 text-sm md:text-base">${standar || '-'}</td>
+                            <td class="px-3 py-4 text-center font-bold text-sm md:text-base">${noUrut || '-'}</td>
+                            <td class="px-3 py-4 text-center">
+                                <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded border border-blue-200">${metode || '-'}</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[300px]">${epText}</td>
+                            <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-semibold min-w-[150px]">${formattedPJ}</td>
+                            <td class="px-4 py-4 text-center min-w-[140px]">
+                                ${linkDoc ? `
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
+                                            <i class="fa-solid fa-folder-open"></i><span>Buka Folder</span>
+                                        </a>
+                                        <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+                                    </div>
+                                ` : `<span class="text-slate-300 text-xs">-</span>`}
+                            </td>
+                            <td class="px-4 py-4 text-center">
+                                <span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm ${skor == 10 ? 'bg-emerald-100 text-emerald-800' : skor == 5 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">${skor !== "" ? skor : 0}</span>
+                            </td>
+                            <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
+                            <td class="px-3 py-4 text-center">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(standar || '')}', '${noUrut}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
                 });
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-xs text-rose-500">Gagal mengambil data dari Google Sheets.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-xs text-rose-500">Gagal mengambil data dari Google Sheets.</td></tr>`;
             }
         }
 
-        // Dropdown Event
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
-        // Modal Handler
-        function openModal(rowIndex, link, skor, catatan) {
+        // Modal Handlers & Memuat File dari Drive
+        async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
+            const pokja = document.getElementById('pokjaSelect').value;
+            const standar = decodeURIComponent(encodedStandar);
+            const pj = decodeURIComponent(encodedPJ);
+            const link = decodeURIComponent(encodedLink);
+            const catatan = decodeURIComponent(encodedCatatan);
+
             document.getElementById('editRowIndex').value = rowIndex;
-            document.getElementById('editLinkDoc').value = link && link !== 'undefined' ? link : '';
-            document.getElementById('editSkor').value = skor && skor !== 'undefined' ? skor : '0';
-            document.getElementById('editCatatan').value = catatan && catatan !== 'undefined' ? catatan : '';
+            document.getElementById('editStandar').value = standar;
+            document.getElementById('editNoUrut').value = noUrut;
+            document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
+            document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
+            document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
+            document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('modalSubTitle').innerText = `${standar || pokja} - EP ${noUrut}`;
+
+            const copyBtn = document.getElementById('btnCopyModalLink');
+            if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
+            else copyBtn.classList.add('hidden');
+
             document.getElementById('editModal').classList.remove('hidden');
+
+            // Ambil daftar file di folder EP dari Drive
+            loadEPFiles(pokja, standar, noUrut);
+        }
+
+        async function loadEPFiles(pokja, standar, noUrut) {
+            const container = document.getElementById('fileListContainer');
+            container.innerHTML = `<div class="text-center py-3 text-slate-400"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Memeriksa folder EP...</div>`;
+
+            try {
+                const res = await fetch(`${API_URL}?action=getEPFiles&pokja=${pokja}&standar=${encodeURIComponent(standar)}&noUrut=${noUrut}`);
+                const files = await res.json();
+
+                container.innerHTML = '';
+                if (!Array.isArray(files) || files.length === 0) {
+                    container.innerHTML = `<div class="text-center py-2 text-slate-400 italic font-semibold text-[11px]">Status: Belum ada file ter-upload (Kosong)</div>`;
+                    return;
+                }
+
+                files.forEach(f => {
+                    const item = document.createElement('div');
+                    item.className = "flex items-center justify-between py-1.5 px-1 hover:bg-slate-100 rounded transition";
+                    item.innerHTML = `
+                        <a href="${f.url}" target="_blank" class="text-emerald-700 font-semibold truncate hover:underline flex items-center space-x-1.5 max-w-[80%]">
+                            <i class="fa-regular fa-file-pdf text-rose-500"></i>
+                            <span class="truncate">${f.name}</span>
+                        </a>
+                        <button type="button" onclick="deleteFile('${f.id}', '${f.name}')" class="text-slate-400 hover:text-rose-600 p-1 transition" title="Hapus File Ini">
+                            <i class="fa-solid fa-xmark font-bold text-sm"></i>
+                        </button>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (err) {
+                container.innerHTML = `<div class="text-center py-2 text-rose-500 text-[11px]">Gagal memuat berkas.</div>`;
+            }
+        }
+
+        // Hapus File dari Drive (Tombol X)
+        async function deleteFile(fileId, fileName) {
+            if (!confirm(`Yakin ingin menghapus file "${fileName}" dari Drive?`)) return;
+
+            const pokja = document.getElementById('pokjaSelect').value;
+            const rowIndex = parseInt(document.getElementById('editRowIndex').value);
+            const standar = document.getElementById('editStandar').value;
+            const noUrut = document.getElementById('editNoUrut').value;
+
+            const payload = {
+                action: "deleteFile",
+                fileId: fileId,
+                pokja: pokja,
+                row: rowIndex,
+                standar: standar,
+                noUrut: noUrut
+            };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    loadEPFiles(pokja, standar, noUrut);
+                    loadPokja(pokja);
+                    loadDashboard();
+                } else {
+                    alert(result.message);
+                }
+            } catch (err) {
+                alert("Gagal menghapus file.");
+            }
         }
 
         function closeModal() {
             document.getElementById('editModal').classList.add('hidden');
         }
 
-        // Submit Form untuk Edit Data ke Google Sheets
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => alert("Link berhasil disalin!"));
+        }
+
+        function copyLinkFromModal() {
+            const link = document.getElementById('editLinkDoc').value;
+            if(link) copyToClipboard(link);
+        }
+
+        // Submit Form (Multiple Upload & Update Text)
         async function submitForm(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSave');
-            btn.innerText = "Saving...";
             btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengunggah & Menyimpan...</span>`;
 
             const pokja = document.getElementById('pokjaSelect').value;
+            const rowIndex = parseInt(document.getElementById('editRowIndex').value);
+            const standar = document.getElementById('editStandar').value;
+            const noUrut = document.getElementById('editNoUrut').value;
+            const fileInput = document.getElementById('fileInput');
+
+            try {
+                let uploadedFiles = [];
+                
+                // 1. Jika ada file baru yang dipilih
+                if (fileInput.files.length > 0) {
+                    const filesPromises = Array.from(fileInput.files).map(file => {
+                        return new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve({
+                                fileName: file.name,
+                                mimeType: file.type,
+                                fileData: reader.result
+                            });
+                            reader.readAsDataURL(file);
+                        });
+                    });
+
+                    uploadedFiles = await Promise.all(filesPromises);
+                }
+
+                // 2. Kirim seluruh data (Files + PJ + Skor + Catatan) dalam 1 Request
+                const payload = {
+                    pokja: pokja,
+                    row: rowIndex,
+                    standar: standar,
+                    noUrut: noUrut,
+                    files: uploadedFiles,
+                    pj: document.getElementById('editPJ').value,
+                    linkDoc: document.getElementById('editLinkDoc').value,
+                    skor: document.getElementById('editSkor').value,
+                    catatan: document.getElementById('editCatatan').value
+                };
+
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if (result.status === "success") {
+                    closeModal();
+                    loadPokja(pokja);
+                    loadDashboard();
+                } else {
+                    alert("Gagal menyimpan: " + (result.message || "Terjadi kesalahan"));
+                }
+
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi saat menyimpan.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Simpan Perubahan</span>`;
+            }
+        }
+
+        async function saveTextData(pokja, rowIndex, linkDoc) {
             const payload = {
                 pokja: pokja,
-                row: parseInt(document.getElementById('editRowIndex').value),
-                linkDoc: document.getElementById('editLinkDoc').value,
+                row: rowIndex,
+                pj: document.getElementById('editPJ').value,
+                linkDoc: linkDoc,
                 skor: document.getElementById('editSkor').value,
                 catatan: document.getElementById('editCatatan').value
             };
 
-            try {
-                await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload)
-                });
-                closeModal();
-                loadPokja(pokja);
-                loadDashboard();
-            } catch (err) {
-                alert("Gagal menyimpan data.");
-            } finally {
-                btn.innerText = "Simpan Perubahan";
-                btn.disabled = false;
-            }
+            await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
         }
     </script>
 </body>
