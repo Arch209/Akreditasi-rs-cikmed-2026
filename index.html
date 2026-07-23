@@ -24,13 +24,18 @@
                 </div>
             </div>
             
+            <!-- Quick Links + TOMBOL SINKRON DATA -->
             <div class="flex items-center space-x-2">
-                <a href="https://drive.google.com/drive/folders/1YlyRjAhfb1ieWM8HVGqwHaFK4XXOF6sv?usp=drive_link" target="_blank" 
+                <button onclick="triggerSyncData()" id="btnSyncHeader" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center space-x-2 transition shadow-sm" title="Sinkronkan File Drive ke Dashboard">
+                    <i class="fa-solid fa-rotate text-sm" id="syncIcon"></i>
+                    <span class="hidden md:inline">Sinkron Data</span>
+                </button>
+                <a href="https://drive.google.com/drive/folders/1YlyRjAhfb1ieWM8HVGqwHaFK4XXOF6sv" target="_blank" 
                    class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center space-x-2 transition border border-emerald-600">
                     <i class="fa-brands fa-google-drive text-emerald-300 text-sm"></i>
                     <span class="hidden md:inline">Google Drive</span>
                 </a>
-                <a href="https://docs.google.com/spreadsheets/d/1jTJSEpTLQ4tQ2ZE8maDW0AapFlpNn72dxZmBiLudTSM/edit?usp=drive_link" target="_blank" 
+                <a href="https://docs.google.com/spreadsheets/d/1jTJSEpTLQ4tQ2ZE8maDW0AapFlpNn72dxZmBiLudTSM/edit" target="_blank" 
                    class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg font-semibold flex items-center space-x-2 transition">
                     <i class="fa-regular fa-file-excel text-emerald-200 text-sm"></i>
                     <span class="hidden md:inline">Spreadsheet</span>
@@ -89,7 +94,6 @@
                 </div>
             </div>
 
-            <!-- Tabel Elemen Penilaian -->
             <div class="overflow-x-auto rounded-xl border border-slate-200">
                 <table class="w-full text-sm text-left text-slate-600">
                     <thead class="text-sm font-bold text-slate-800 uppercase bg-slate-50 border-b border-slate-200">
@@ -132,19 +136,15 @@
             
             <form id="editForm" onsubmit="submitForm(event)" class="space-y-4 text-xs">
                 <input type="hidden" id="editRowIndex">
+                <input type="hidden" id="editPokja">
                 <input type="hidden" id="editStandar">
                 <input type="hidden" id="editNoUrut">
-                <input type="hidden" id="editRowIndex">
-                <input type="hidden" id="editPokja"> <!-- <--- Tambahkan ini -->
-
                 
-                <!-- PENANGGUNG JAWAB (MULTI-LINE) -->
                 <div>
                     <label class="font-bold text-slate-700 block mb-1">Penanggung Jawab (PJ)</label>
                     <textarea id="editPJ" rows="2" placeholder="Nama / Jabatan PJ (Tekan Enter untuk baris baru)..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed"></textarea>
                 </div>
 
-                <!-- LIST FILE YANG SUDAH TER-UPLOAD DI FOLDER EP -->
                 <div class="space-y-1.5">
                     <label class="font-bold text-slate-700 block">Daftar Berkas Ter-upload di Folder EP</label>
                     <div id="fileListContainer" class="bg-slate-50 rounded-xl p-3 border border-slate-200 max-h-40 overflow-y-auto divide-y divide-slate-100">
@@ -154,14 +154,12 @@
                     </div>
                 </div>
 
-                <!-- UPLOAD BANYAK FILE SEKALIGUS (MULTIPLE) -->
                 <div class="bg-emerald-50/50 p-3 rounded-xl border border-dashed border-emerald-300 space-y-2">
                     <label class="font-bold text-emerald-800 block">Tambah / Upload File Baru</label>
                     <input type="file" id="fileInput" multiple class="w-full text-slate-500 text-xs file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
                     <p class="text-[10px] text-slate-500">*Bisa pilih lebih dari 1 file sekaligus (Ctrl + Click).</p>
                 </div>
 
-                <!-- LINK FOLDER DRIVE MANUAL -->
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="font-bold text-slate-700 block">Link Folder Google Drive</label>
@@ -202,8 +200,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        // PENTING: Ganti URL di bawah ini dengan URL Web App Apps Script milikmu yang terbaru
-        const API_URL = "https://script.google.com/macros/s/AKfycbz85b-c4YcMh6m46n-iuCrCE391lq2qoq4KYPNa6SpmpCk0MdEHYaloSPwV9m_wmgOWNQ/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzrL15uNP6AF_ofzmizlRd3LSopgW26kXHlrlo0xqwKHGlbvB-yVZRA66XvqNWTptU21Q/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -260,13 +257,12 @@
         async function loadPokja(pokjaName) {
             const tbody = document.getElementById('epTableBody');
             
-            // Animasi Skeleton Loading Modern
             tbody.innerHTML = Array(4).fill(0).map(() => `
                 <tr class="animate-pulse border-b border-slate-100">
                     <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
                     <td class="px-3 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-6 mx-auto"></div></td>
                     <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-8 mx-auto"></div></td>
-                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div><div class="h-3 bg-slate-100 rounded w-3/4"></div></td>
+                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div></td>
                     <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
                     <td class="px-4 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-16 mx-auto"></div></td>
                     <td class="px-4 py-4 text-center"><div class="h-6 bg-slate-200 rounded-full w-8 mx-auto"></div></td>
@@ -286,8 +282,10 @@
                     return;
                 }
 
+                let activeStandar = pokjaName + " 1"; 
+
                 currentPokjaData.forEach((row, idx) => {
-                    const standar = row[0];
+                    const standarRaw = row[0];
                     const noUrut = row[1];
                     const metode = row[2];
                     const epText = row[3];
@@ -296,13 +294,18 @@
                     const skor = row[7];
                     const catatan = row[8];
 
+                    if (standarRaw && standarRaw !== "-" && standarRaw.toString().trim() !== "") {
+                        activeStandar = standarRaw.toString().trim();
+                    }
+
                     if (epText) {
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
+                        const currentStandarForThisRow = activeStandar;
 
                         const tr = document.createElement('tr');
                         tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                         tr.innerHTML = `
-                            <td class="px-4 py-4 font-bold text-slate-900 text-sm md:text-base">${standar || '-'}</td>
+                            <td class="px-4 py-4 font-bold text-slate-900 text-sm md:text-base">${standarRaw || '-'}</td>
                             <td class="px-3 py-4 text-center font-bold text-sm md:text-base">${noUrut || '-'}</td>
                             <td class="px-3 py-4 text-center">
                                 <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded border border-blue-200">${metode || '-'}</span>
@@ -326,7 +329,7 @@
                             </td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
                             <td class="px-3 py-4 text-center">
-                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(standar || '')}', '${noUrut}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </td>
@@ -339,17 +342,45 @@
             }
         }
 
+        // FUNGSI SINKRON DATA HEADER
+        async function triggerSyncData() {
+            const btn = document.getElementById('btnSyncHeader');
+            const icon = document.getElementById('syncIcon');
+            
+            btn.disabled = true;
+            icon.classList.add('fa-spin');
+
+            try {
+                const res = await fetch(`${API_URL}?action=syncAllDrive`);
+                const result = await res.json();
+                
+                if (result.status === "success") {
+                    alert(result.summary);
+                    const pokja = document.getElementById('pokjaSelect').value;
+                    loadPokja(pokja);
+                    loadDashboard();
+                } else {
+                    alert("Gagal melakukan sinkronisasi data.");
+                }
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi saat memicu sinkronisasi.");
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('fa-spin');
+            }
+        }
+
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
-        // Modal Handlers & Memuat File dari Drive
         async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
-            const pokja = document.getElementById('pokjaSelect').value;
+            const currentPokja = document.getElementById('pokjaSelect').value;
             const standar = decodeURIComponent(encodedStandar);
             const pj = decodeURIComponent(encodedPJ);
             const link = decodeURIComponent(encodedLink);
             const catatan = decodeURIComponent(encodedCatatan);
 
             document.getElementById('editRowIndex').value = rowIndex;
+            document.getElementById('editPokja').value = currentPokja;
             document.getElementById('editStandar').value = standar;
             document.getElementById('editNoUrut').value = noUrut;
             document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
@@ -357,7 +388,8 @@
             document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
             document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
             document.getElementById('fileInput').value = '';
-            document.getElementById('modalSubTitle').innerText = `${standar || pokja} - EP ${noUrut}`;
+            
+            document.getElementById('modalSubTitle').innerText = `${standar} - EP ${noUrut}`;
 
             const copyBtn = document.getElementById('btnCopyModalLink');
             if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
@@ -365,8 +397,7 @@
 
             document.getElementById('editModal').classList.remove('hidden');
 
-            // Ambil daftar file di folder EP dari Drive
-            loadEPFiles(pokja, standar, noUrut);
+            loadEPFiles(currentPokja, standar, noUrut);
         }
 
         async function loadEPFiles(pokja, standar, noUrut) {
@@ -402,11 +433,10 @@
             }
         }
 
-        // Hapus File dari Drive (Tombol X)
         async function deleteFile(fileId, fileName) {
             if (!confirm(`Yakin ingin menghapus file "${fileName}" dari Drive?`)) return;
 
-            const pokja = document.getElementById('pokjaSelect').value;
+            const pokja = document.getElementById('editPokja').value;
             const rowIndex = parseInt(document.getElementById('editRowIndex').value);
             const standar = document.getElementById('editStandar').value;
             const noUrut = document.getElementById('editNoUrut').value;
@@ -452,14 +482,13 @@
             if(link) copyToClipboard(link);
         }
 
-        // Submit Form (Multiple Upload & Update Text)
         async function submitForm(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSave');
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengunggah & Menyimpan...</span>`;
 
-            const pokja = document.getElementById('pokjaSelect').value;
+            const pokja = document.getElementById('editPokja').value;
             const rowIndex = parseInt(document.getElementById('editRowIndex').value);
             const standar = document.getElementById('editStandar').value;
             const noUrut = document.getElementById('editNoUrut').value;
@@ -468,7 +497,6 @@
             try {
                 let uploadedFiles = [];
                 
-                // 1. Jika ada file baru yang dipilih
                 if (fileInput.files.length > 0) {
                     const filesPromises = Array.from(fileInput.files).map(file => {
                         return new Promise((resolve) => {
@@ -485,7 +513,6 @@
                     uploadedFiles = await Promise.all(filesPromises);
                 }
 
-                // 2. Kirim seluruh data (Files + PJ + Skor + Catatan) dalam 1 Request
                 const payload = {
                     pokja: pokja,
                     row: rowIndex,
@@ -519,22 +546,6 @@
                 btn.disabled = false;
                 btn.innerHTML = `<span>Simpan Perubahan</span>`;
             }
-        }
-
-        async function saveTextData(pokja, rowIndex, linkDoc) {
-            const payload = {
-                pokja: pokja,
-                row: rowIndex,
-                pj: document.getElementById('editPJ').value,
-                linkDoc: linkDoc,
-                skor: document.getElementById('editSkor').value,
-                catatan: document.getElementById('editCatatan').value
-            };
-
-            await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            });
         }
     </script>
 </body>
