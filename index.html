@@ -342,22 +342,22 @@
             }
         }
 
-        // FUNGSI SINKRON DATA HEADER
+        // FUNGSI SINKRON POKJA AKTIF (SUPER FAST)
         async function triggerSyncData() {
             const btn = document.getElementById('btnSyncHeader');
             const icon = document.getElementById('syncIcon');
+            const currentPokja = document.getElementById('pokjaSelect').value;
             
             btn.disabled = true;
             icon.classList.add('fa-spin');
 
             try {
-                const res = await fetch(`${API_URL}?action=syncAllDrive`);
+                const res = await fetch(`${API_URL}?action=syncPokjaDrive&pokja=${currentPokja}`);
                 const result = await res.json();
                 
                 if (result.status === "success") {
                     alert(result.summary);
-                    const pokja = document.getElementById('pokjaSelect').value;
-                    loadPokja(pokja);
+                    loadPokja(currentPokja);
                     loadDashboard();
                 } else {
                     alert("Gagal melakukan sinkronisasi data.");
