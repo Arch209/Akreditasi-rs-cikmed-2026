@@ -200,7 +200,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzrL15uNP6AF_ofzmizlRd3LSopgW26kXHlrlo0xqwKHGlbvB-yVZRA66XvqNWTptU21Q/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbwaggrwG6lHUtnuXomxULULfkY1mi7K9keQngrR4WavSjr8feYR-4YNp4i1vcwzNARKxg/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -342,7 +342,7 @@
             }
         }
 
-        // FUNGSI SINKRON POKJA AKTIF (SUPER FAST)
+        // FUNGSI SINKRON POKJA AKTIF (DENGAN DETEKSI ERROR PRESISI)
         async function triggerSyncData() {
             const btn = document.getElementById('btnSyncHeader');
             const icon = document.getElementById('syncIcon');
@@ -360,7 +360,7 @@
                     loadPokja(currentPokja);
                     loadDashboard();
                 } else {
-                    alert("Gagal melakukan sinkronisasi data.");
+                    alert("Gagal Sinkronisasi: " + (result.message || result.error || "Terjadi kesalahan di Apps Script"));
                 }
             } catch (err) {
                 alert("Terjadi kesalahan koneksi saat memicu sinkronisasi.");
@@ -369,7 +369,7 @@
                 icon.classList.remove('fa-spin');
             }
         }
-
+        
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
         async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
