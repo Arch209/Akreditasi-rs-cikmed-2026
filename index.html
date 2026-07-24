@@ -183,7 +183,14 @@
                     <label class="font-bold text-slate-700 block mb-1">Catatan Kelengkapan</label>
                     <textarea id="editCatatan" rows="2" placeholder="Masukkan catatan kelengkapan..." class="w-full p-2.5 rounded-lg border border-slate-300"></textarea>
                 </div>
-
+                <!-- TAMBAHAN CHECKBOX HANYA OBSERVASI -->
+                    <div class="flex items-center space-x-2 bg-amber-50/60 p-3 rounded-xl border border-amber-200">
+                        <input type="checkbox" id="editIsObservasi" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+                        <label for="editIsObservasi" class="text-xs font-bold text-slate-700 cursor-pointer">
+                            Hanya Observasi / Wawancara (Tanpa Unggah Dokumen)
+                        </label>
+                    </div>
+                
                 <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200">Batal</button>
                     <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center space-x-2">
@@ -200,7 +207,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbwaggrwG6lHUtnuXomxULULfkY1mi7K9keQngrR4WavSjr8feYR-4YNp4i1vcwzNARKxg/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzwIv4CTyjncr2085skGB1bc13-sEezdHt7B263z2f1yMEUKirWPeizvuoFEFH7qNlOnA/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -290,6 +297,7 @@
                     const metode = row[2];
                     const epText = row[3];
                     const pjText = row[4];
+                    const isChecklist = row[5];
                     const linkDoc = row[6];
                     const skor = row[7];
                     const catatan = row[8];
@@ -302,6 +310,27 @@
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
                         const currentStandarForThisRow = activeStandar;
 
+                        let dokumenCellHTML = `<span class="text-slate-300 text-xs">-</span>`;
+
+                        if (linkDoc && linkDoc.toString().startsWith("http")) {
+                            dokumenCellHTML = `
+                                <div class="flex items-center justify-center space-x-2">
+                                    <a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
+                                        <i class="fa-solid fa-folder-open"></i><span>Buka Folder</span>
+                                    </a>
+                                    <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
+                                        <i class="fa-regular fa-copy"></i>
+                                    </button>
+                                </div>
+                            `;
+                        } else if (isChecklist === true || isChecklist === "TRUE") {
+                            dokumenCellHTML = `
+                                <span class="inline-flex items-center space-x-1 text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200">
+                                    <i class="fa-solid fa-eye text-[10px]"></i><span>Observasi</span>
+                                </span>
+                            `;
+                        }
+                        
                         const tr = document.createElement('tr');
                         tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                         tr.innerHTML = `
@@ -373,12 +402,14 @@
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
         async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
+            const isChecked = currentPokjaData[rowIndex - 6][5]; 
             const currentPokja = document.getElementById('pokjaSelect').value;
             const standar = decodeURIComponent(encodedStandar);
             const pj = decodeURIComponent(encodedPJ);
             const link = decodeURIComponent(encodedLink);
             const catatan = decodeURIComponent(encodedCatatan);
 
+            document.getElementById('editIsObservasi').checked = (isChecked === true && (!link || link === 'undefined' || link === ''));
             document.getElementById('editRowIndex').value = rowIndex;
             document.getElementById('editPokja').value = currentPokja;
             document.getElementById('editStandar').value = standar;
@@ -488,6 +519,19 @@
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengunggah & Menyimpan...</span>`;
 
+            // Tambahkan variabel isObservasi di payload POST fungsi submitForm:
+            const payload = {
+                pokja: pokja,
+                row: rowIndex,
+                standar: standar,
+                noUrut: noUrut,
+                files: uploadedFiles,
+                isObservasi: document.getElementById('editIsObservasi').checked, // <--- Tambahkan baris ini
+                pj: document.getElementById('editPJ').value,
+                linkDoc: document.getElementById('editLinkDoc').value,
+                skor: document.getElementById('editSkor').value,
+                catatan: document.getElementById('editCatatan').value
+            };
             const pokja = document.getElementById('editPokja').value;
             const rowIndex = parseInt(document.getElementById('editRowIndex').value);
             const standar = document.getElementById('editStandar').value;
