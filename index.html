@@ -207,7 +207,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxXiIJFQm3LtfawO716bcGpYiurG85ObVliYTo6E7VNtjLGe8BfuC7Hy3oyzMcRUixdAg/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxHPTL4Yl6qIb4v5MtbQrtPtuBJ3qMfanl8cMtCquXp27YgxWn_hlGRfw30dXVlXNerDQ/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -415,14 +415,12 @@
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
         async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
-            const isChecked = currentPokjaData[rowIndex - 6][5]; 
             const currentPokja = document.getElementById('pokjaSelect').value;
             const standar = decodeURIComponent(encodedStandar);
             const pj = decodeURIComponent(encodedPJ);
             const link = decodeURIComponent(encodedLink);
             const catatan = decodeURIComponent(encodedCatatan);
 
-            document.getElementById('editIsObservasi').checked = (isChecked === true && (!link || link === 'undefined' || link === ''));
             document.getElementById('editRowIndex').value = rowIndex;
             document.getElementById('editPokja').value = currentPokja;
             document.getElementById('editStandar').value = standar;
@@ -438,6 +436,13 @@
             const copyBtn = document.getElementById('btnCopyModalLink');
             if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
             else copyBtn.classList.add('hidden');
+
+            // PERBAIKAN DI SINI: Baca status checklist langsung dari data baris (Kolom F)
+            const rowData = currentPokjaData[rowIndex - 6];
+            const isChecklistTrue = rowData ? (rowData[5] === true || rowData[5] === "TRUE") : false;
+            
+            // Centang otomatis checkbox jika Kolom F bernilai TRUE
+            document.getElementById('editIsObservasi').checked = isChecklistTrue;
 
             document.getElementById('editModal').classList.remove('hidden');
 
