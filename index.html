@@ -207,7 +207,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzwIv4CTyjncr2085skGB1bc13-sEezdHt7B263z2f1yMEUKirWPeizvuoFEFH7qNlOnA/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbw4wh-O3zpt21dIl8QybmT6ygej-RLb7vdmpYs-L0XRTCSqY-KzUeXg8EqEk51YbJaRNA/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -310,9 +310,28 @@
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
                         const currentStandarForThisRow = activeStandar;
 
+                        // PERBAIKAN RENDERING DOKUMEN & OBSERVASI
                         let dokumenCellHTML = `<span class="text-slate-300 text-xs">-</span>`;
 
-                        if (linkDoc && linkDoc.toString().startsWith("http")) {
+                        const hasValidLink = linkDoc && linkDoc.toString().startsWith("http");
+
+                        if (hasValidLink && (isChecklist === true || isChecklist === "TRUE")) {
+                            dokumenCellHTML = `
+                                <div class="flex flex-col items-center space-y-1">
+                                    <span class="inline-flex items-center space-x-1 text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-200">
+                                        <i class="fa-solid fa-eye"></i><span>Observasi</span>
+                                    </span>
+                                    <div class="flex items-center space-x-1">
+                                        <a href="${linkDoc}" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline inline-flex items-center space-x-1">
+                                            <i class="fa-solid fa-folder-open text-[10px]"></i><span>Folder</span>
+                                        </a>
+                                        <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-[10px] p-0.5" title="Salin Link">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (hasValidLink) {
                             dokumenCellHTML = `
                                 <div class="flex items-center justify-center space-x-2">
                                     <a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
@@ -322,12 +341,6 @@
                                         <i class="fa-regular fa-copy"></i>
                                     </button>
                                 </div>
-                            `;
-                        } else if (isChecklist === true || isChecklist === "TRUE") {
-                            dokumenCellHTML = `
-                                <span class="inline-flex items-center space-x-1 text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200">
-                                    <i class="fa-solid fa-eye text-[10px]"></i><span>Observasi</span>
-                                </span>
                             `;
                         }
                         
