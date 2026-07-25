@@ -24,9 +24,8 @@
                 </div>
             </div>
             
-            <!-- Quick Links + TOMBOL SINKRON DATA -->
             <div class="flex items-center space-x-2">
-                <button onclick="triggerSyncData()" id="btnSyncHeader" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center space-x-2 transition shadow-sm" title="Sinkronkan File Drive ke Dashboard">
+                <button onclick="triggerSyncData()" id="btnSyncHeader" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center space-x-2 transition shadow-sm" title="Sinkronkan File Drive Pokja Ini">
                     <i class="fa-solid fa-rotate text-sm" id="syncIcon"></i>
                     <span class="hidden md:inline">Sinkron Data</span>
                 </button>
@@ -110,12 +109,7 @@
                         </tr>
                     </thead>
                     <tbody id="epTableBody" class="divide-y divide-slate-200">
-                        <tr>
-                            <td colspan="9" class="text-center py-8 text-xs text-slate-400">
-                                <i class="fa-solid fa-spinner fa-spin text-lg text-emerald-600 mb-2 block"></i>
-                                Memuat data Elemen Penilaian...
-                            </td>
-                        </tr>
+                        <!-- Skeleton loading disuntikkan via JS -->
                     </tbody>
                 </table>
             </div>
@@ -183,14 +177,15 @@
                     <label class="font-bold text-slate-700 block mb-1">Catatan Kelengkapan</label>
                     <textarea id="editCatatan" rows="2" placeholder="Masukkan catatan kelengkapan..." class="w-full p-2.5 rounded-lg border border-slate-300"></textarea>
                 </div>
-                <!-- TAMBAHAN CHECKBOX HANYA OBSERVASI -->
-                    <div class="flex items-center space-x-2 bg-amber-50/60 p-3 rounded-xl border border-amber-200">
-                        <input type="checkbox" id="editIsObservasi" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
-                        <label for="editIsObservasi" class="text-xs font-bold text-slate-700 cursor-pointer">
-                            Hanya Observasi / Wawancara (Tanpa Unggah Dokumen)
-                        </label>
-                    </div>
-                
+
+                <!-- CHECKBOX OBSERVASI -->
+                <div class="flex items-center space-x-2 bg-amber-50/80 p-3 rounded-xl border border-amber-200">
+                    <input type="checkbox" id="editIsObservasi" class="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer">
+                    <label for="editIsObservasi" class="text-xs font-bold text-slate-700 cursor-pointer">
+                        Hanya Observasi / Wawancara (Tanpa Unggah Dokumen)
+                    </label>
+                </div>
+
                 <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200">Batal</button>
                     <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center space-x-2">
@@ -207,7 +202,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxTFDEB4z9gL12z_inZHBpqn6WBY5RYiYbGw7-Pv5PvSR1t7nIOc3i2UzRcP7uJsnD3iQ/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbzou0uPKn9X_tHPfxt7zrHLbpSYqXu-8LWLaC8AvJcwZusQz--y-bwozZNkJwBKu8Yoog/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -310,9 +305,8 @@
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
                         const currentStandarForThisRow = activeStandar;
 
-                        // PERBAIKAN RENDERING DOKUMEN & OBSERVASI
+                        // RENDER BADGE DOKUMEN / OBSERVASI
                         let dokumenCellHTML = `<span class="text-slate-300 text-xs">-</span>`;
-
                         const hasValidLink = linkDoc && linkDoc.toString().startsWith("http");
 
                         if (hasValidLink && (isChecklist === true || isChecklist === "TRUE")) {
@@ -342,8 +336,14 @@
                                     </button>
                                 </div>
                             `;
+                        } else if (isChecklist === true || isChecklist === "TRUE") {
+                            dokumenCellHTML = `
+                                <span class="inline-flex items-center space-x-1 text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200">
+                                    <i class="fa-solid fa-eye text-[10px]"></i><span>Observasi</span>
+                                </span>
+                            `;
                         }
-                        
+
                         const tr = document.createElement('tr');
                         tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                         tr.innerHTML = `
@@ -354,18 +354,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[300px]">${epText}</td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-semibold min-w-[150px]">${formattedPJ}</td>
-                            <td class="px-4 py-4 text-center min-w-[140px]">
-                                ${linkDoc ? `
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
-                                            <i class="fa-solid fa-folder-open"></i><span>Buka Folder</span>
-                                        </a>
-                                        <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
-                                            <i class="fa-regular fa-copy"></i>
-                                        </button>
-                                    </div>
-                                ` : `<span class="text-slate-300 text-xs">-</span>`}
-                            </td>
+                            <td class="px-4 py-4 text-center min-w-[140px]">${dokumenCellHTML}</td>
                             <td class="px-4 py-4 text-center">
                                 <span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm ${skor == 10 ? 'bg-emerald-100 text-emerald-800' : skor == 5 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">${skor !== "" ? skor : 0}</span>
                             </td>
@@ -384,7 +373,6 @@
             }
         }
 
-        // FUNGSI SINKRON POKJA AKTIF (DENGAN DETEKSI ERROR PRESISI)
         async function triggerSyncData() {
             const btn = document.getElementById('btnSyncHeader');
             const icon = document.getElementById('syncIcon');
@@ -402,7 +390,7 @@
                     loadPokja(currentPokja);
                     loadDashboard();
                 } else {
-                    alert("Gagal Sinkronisasi: " + (result.message || result.error || "Terjadi kesalahan di Apps Script"));
+                    alert("Gagal Sinkronisasi: " + (result.message || "Terjadi kesalahan di Apps Script"));
                 }
             } catch (err) {
                 alert("Terjadi kesalahan koneksi saat memicu sinkronisasi.");
@@ -411,7 +399,7 @@
                 icon.classList.remove('fa-spin');
             }
         }
-        
+
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
         async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
@@ -437,11 +425,8 @@
             if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
             else copyBtn.classList.add('hidden');
 
-            // PERBAIKAN DI SINI: Baca status checklist langsung dari data baris (Kolom F)
             const rowData = currentPokjaData[rowIndex - 6];
             const isChecklistTrue = rowData ? (rowData[5] === true || rowData[5] === "TRUE") : false;
-            
-            // Centang otomatis checkbox jika Kolom F bernilai TRUE
             document.getElementById('editIsObservasi').checked = isChecklistTrue;
 
             document.getElementById('editModal').classList.remove('hidden');
@@ -542,7 +527,6 @@
             const standar = document.getElementById('editStandar').value;
             const noUrut = document.getElementById('editNoUrut').value;
             const fileInput = document.getElementById('fileInput');
-            const isObservasiChecked = document.getElementById('editIsObservasi').checked;
 
             try {
                 let uploadedFiles = [];
@@ -569,7 +553,7 @@
                     standar: standar,
                     noUrut: noUrut,
                     files: uploadedFiles,
-                    isObservasi: isObservasiChecked, // Kirim status checkbox Observasi
+                    isObservasi: document.getElementById('editIsObservasi').checked,
                     pj: document.getElementById('editPJ').value,
                     linkDoc: document.getElementById('editLinkDoc').value,
                     skor: document.getElementById('editSkor').value,
@@ -588,7 +572,7 @@
                     loadPokja(pokja);
                     loadDashboard();
                 } else {
-                    alert("Gagal menyimpan: " + (result.message || "Terjadi kesalahan di Apps Script"));
+                    alert("Gagal menyimpan: " + (result.message || "Terjadi kesalahan"));
                 }
 
             } catch (err) {
