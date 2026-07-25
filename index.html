@@ -202,7 +202,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzou0uPKn9X_tHPfxt7zrHLbpSYqXu-8LWLaC8AvJcwZusQz--y-bwozZNkJwBKu8Yoog/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxMka9klNvFr-riNxWU-XX6QUcCL-J50RoVnv5ep85f9OIDxN5n-XCUQtwoNelS9MDLWw/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -305,21 +305,23 @@
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
                         const currentStandarForThisRow = activeStandar;
 
-                        // RENDER BADGE DOKUMEN / OBSERVASI
+                        // RENDER BADGE DOKUMEN / OBSERVASI PRESISI
                         let dokumenCellHTML = `<span class="text-slate-300 text-xs">-</span>`;
-                        const hasValidLink = linkDoc && linkDoc.toString().startsWith("http");
+                        const linkStr = linkDoc ? linkDoc.toString() : "";
+                        const hasValidLink = linkStr.startsWith("http");
+                        const isObservasiTag = linkStr.includes("#observasi") || linkStr === "OBSERVASI";
 
-                        if (hasValidLink && (isChecklist === true || isChecklist === "TRUE")) {
+                        if (hasValidLink && isObservasiTag) {
                             dokumenCellHTML = `
                                 <div class="flex flex-col items-center space-y-1">
                                     <span class="inline-flex items-center space-x-1 text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full border border-amber-200">
                                         <i class="fa-solid fa-eye"></i><span>Observasi</span>
                                     </span>
                                     <div class="flex items-center space-x-1">
-                                        <a href="${linkDoc}" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline inline-flex items-center space-x-1">
+                                        <a href="${linkStr}" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline inline-flex items-center space-x-1">
                                             <i class="fa-solid fa-folder-open text-[10px]"></i><span>Folder</span>
                                         </a>
-                                        <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-[10px] p-0.5" title="Salin Link">
+                                        <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-[10px] p-0.5" title="Salin Link">
                                             <i class="fa-regular fa-copy"></i>
                                         </button>
                                     </div>
@@ -328,15 +330,15 @@
                         } else if (hasValidLink) {
                             dokumenCellHTML = `
                                 <div class="flex items-center justify-center space-x-2">
-                                    <a href="${linkDoc}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
+                                    <a href="${linkStr}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
                                         <i class="fa-solid fa-folder-open"></i><span>Buka Folder</span>
                                     </a>
-                                    <button onclick="copyToClipboard('${linkDoc}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
+                                    <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
                                         <i class="fa-regular fa-copy"></i>
                                     </button>
                                 </div>
                             `;
-                        } else if (isChecklist === true || isChecklist === "TRUE") {
+                        } else if (isObservasiTag) {
                             dokumenCellHTML = `
                                 <span class="inline-flex items-center space-x-1 text-xs bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200">
                                     <i class="fa-solid fa-eye text-[10px]"></i><span>Observasi</span>
@@ -402,37 +404,42 @@
 
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
-        async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
-            const currentPokja = document.getElementById('pokjaSelect').value;
-            const standar = decodeURIComponent(encodedStandar);
-            const pj = decodeURIComponent(encodedPJ);
-            const link = decodeURIComponent(encodedLink);
-            const catatan = decodeURIComponent(encodedCatatan);
+       async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
+    const currentPokja = document.getElementById('pokjaSelect').value;
+    const standar = decodeURIComponent(encodedStandar);
+    const pj = decodeURIComponent(encodedPJ);
+    const link = decodeURIComponent(encodedLink);
+    const catatan = decodeURIComponent(encodedCatatan);
 
-            document.getElementById('editRowIndex').value = rowIndex;
-            document.getElementById('editPokja').value = currentPokja;
-            document.getElementById('editStandar').value = standar;
-            document.getElementById('editNoUrut').value = noUrut;
-            document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
-            document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
-            document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
-            document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
-            document.getElementById('fileInput').value = '';
-            
-            document.getElementById('modalSubTitle').innerText = `${standar} - EP ${noUrut}`;
+    document.getElementById('editRowIndex').value = rowIndex;
+    document.getElementById('editPokja').value = currentPokja;
+    document.getElementById('editStandar').value = standar;
+    document.getElementById('editNoUrut').value = noUrut;
+    document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
+    document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
+    document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
+    document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
+    document.getElementById('fileInput').value = '';
+    
+    document.getElementById('modalSubTitle').innerText = `${standar} - EP ${noUrut}`;
 
-            const copyBtn = document.getElementById('btnCopyModalLink');
-            if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
-            else copyBtn.classList.add('hidden');
+    const copyBtn = document.getElementById('btnCopyModalLink');
+    if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
+    else copyBtn.classList.add('hidden');
 
-            const rowData = currentPokjaData[rowIndex - 6];
-            const isChecklistTrue = rowData ? (rowData[5] === true || rowData[5] === "TRUE") : false;
-            document.getElementById('editIsObservasi').checked = isChecklistTrue;
+    // =========================================================================
+    // PERBAIKAN DI SINI:
+    // Cek apakah link mengandung tag '#observasi' atau bernilai 'OBSERVASI'
+    // =========================================================================
+    const linkStr = (link && link !== 'undefined') ? link.toString() : "";
+    const isObsSaved = linkStr.includes("#observasi") || linkStr === "OBSERVASI";
+    
+    document.getElementById('editIsObservasi').checked = isObsSaved;
 
-            document.getElementById('editModal').classList.remove('hidden');
+    document.getElementById('editModal').classList.remove('hidden');
 
-            loadEPFiles(currentPokja, standar, noUrut);
-        }
+    loadEPFiles(currentPokja, standar, noUrut);
+}
 
         async function loadEPFiles(pokja, standar, noUrut) {
             const container = document.getElementById('fileListContainer');
