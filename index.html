@@ -100,7 +100,8 @@
                             <th class="px-4 py-3">Standar</th>
                             <th class="px-3 py-3 text-center">No</th>
                             <th class="px-3 py-3 text-center">Metode</th>
-                            <th class="px-6 py-3 min-w-[300px]">Elemen Penilaian (EP)</th>
+                            <th class="px-6 py-3 min-w-[280px]">Elemen Penilaian (EP)</th>
+                            <th class="px-4 py-3 min-w-[220px]">Kelengkapan Bukti</th> <!-- KOLOM BARU -->
                             <th class="px-4 py-3 min-w-[150px]">Penanggung Jawab</th>
                             <th class="px-4 py-3 text-center min-w-[140px]">Dokumen</th>
                             <th class="px-4 py-3 text-center">Skor</th>
@@ -109,7 +110,7 @@
                         </tr>
                     </thead>
                     <tbody id="epTableBody" class="divide-y divide-slate-200">
-                        <!-- Skeleton loading disuntikkan via JS -->
+                        <!-- Skeleton loading -->
                     </tbody>
                 </table>
             </div>
@@ -135,8 +136,13 @@
                 <input type="hidden" id="editNoUrut">
                 
                 <div>
+                    <label class="font-bold text-slate-700 block mb-1">Kelengkapan Bukti (Sesuai Spreadsheet)</label>
+                    <textarea id="editKelengkapanBukti" rows="2" placeholder="Detail bukti dokumen / telusur..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed"></textarea>
+                </div>
+
+                <div>
                     <label class="font-bold text-slate-700 block mb-1">Penanggung Jawab (PJ)</label>
-                    <textarea id="editPJ" rows="2" placeholder="Nama / Jabatan PJ (Tekan Enter untuk baris baru)..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed"></textarea>
+                    <textarea id="editPJ" rows="2" placeholder="Nama / Jabatan PJ..." class="w-full p-2.5 rounded-lg border border-slate-300 focus:ring-emerald-500 focus:border-emerald-500 leading-relaxed"></textarea>
                 </div>
 
                 <div class="space-y-1.5">
@@ -202,7 +208,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxMka9klNvFr-riNxWU-XX6QUcCL-J50RoVnv5ep85f9OIDxN5n-XCUQtwoNelS9MDLWw/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycby89dSphSeyWCDl-T9GEa8xS8G8YADNqEbruSXfkL7Rhx8N2bFqUhN4LvE_XuW6k4S_Lg/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -265,6 +271,7 @@
                     <td class="px-3 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-6 mx-auto"></div></td>
                     <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-8 mx-auto"></div></td>
                     <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div></td>
+                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
                     <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
                     <td class="px-4 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-16 mx-auto"></div></td>
                     <td class="px-4 py-4 text-center"><div class="h-6 bg-slate-200 rounded-full w-8 mx-auto"></div></td>
@@ -280,7 +287,7 @@
                 tbody.innerHTML = '';
                 
                 if (!Array.isArray(currentPokjaData) || currentPokjaData.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-xs text-slate-400">Belum ada data pada Pokja ini.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="10" class="text-center py-6 text-xs text-slate-400">Belum ada data pada Pokja ini.</td></tr>`;
                     return;
                 }
 
@@ -291,21 +298,23 @@
                     const noUrut = row[1];
                     const metode = row[2];
                     const epText = row[3];
-                    const pjText = row[4];
-                    const isChecklist = row[5];
-                    const linkDoc = row[6];
-                    const skor = row[7];
-                    const catatan = row[8];
+                    const kelengkapanBukti = row[4]; // Kolom E (Kelengkapan Bukti)
+                    const pjText = row[5];           // Kolom F (PJ)
+                    const isChecklist = row[6];      // Kolom G (Checklist)
+                    const linkDoc = row[7];          // Kolom H (Link Folder)
+                    const skor = row[8];             // Kolom I (Skor)
+                    const catatan = row[9];          // Kolom J (Catatan)
 
                     if (standarRaw && standarRaw !== "-" && standarRaw.toString().trim() !== "") {
                         activeStandar = standarRaw.toString().trim();
                     }
 
                     if (epText) {
+                        const formattedBukti = kelengkapanBukti ? kelengkapanBukti.toString().replace(/\n/g, '<br>') : '-';
                         const formattedPJ = pjText ? pjText.toString().replace(/\n/g, '<br>') : '-';
                         const currentStandarForThisRow = activeStandar;
 
-                        // RENDER BADGE DOKUMEN / OBSERVASI PRESISI
+                        // RENDER BADGE DOKUMEN / OBSERVASI
                         let dokumenCellHTML = `<span class="text-slate-300 text-xs">-</span>`;
                         const linkStr = linkDoc ? linkDoc.toString() : "";
                         const hasValidLink = linkStr.startsWith("http");
@@ -354,7 +363,8 @@
                             <td class="px-3 py-4 text-center">
                                 <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded border border-blue-200">${metode || '-'}</span>
                             </td>
-                            <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[300px]">${epText}</td>
+                            <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[280px]">${epText}</td>
+                            <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-normal min-w-[220px] bg-emerald-50/20">${formattedBukti}</td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-semibold min-w-[150px]">${formattedPJ}</td>
                             <td class="px-4 py-4 text-center min-w-[140px]">${dokumenCellHTML}</td>
                             <td class="px-4 py-4 text-center">
@@ -362,7 +372,7 @@
                             </td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
                             <td class="px-3 py-4 text-center">
-                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </td>
@@ -371,7 +381,7 @@
                     }
                 });
             } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="9" class="text-center py-6 text-xs text-rose-500">Gagal mengambil data dari Google Sheets.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-6 text-xs text-rose-500">Gagal mengambil data dari Google Sheets.</td></tr>`;
             }
         }
 
@@ -404,42 +414,39 @@
 
         document.getElementById('pokjaSelect').addEventListener('change', (e) => loadPokja(e.target.value));
 
-       async function openModal(rowIndex, encodedStandar, noUrut, encodedPJ, encodedLink, skor, encodedCatatan) {
-    const currentPokja = document.getElementById('pokjaSelect').value;
-    const standar = decodeURIComponent(encodedStandar);
-    const pj = decodeURIComponent(encodedPJ);
-    const link = decodeURIComponent(encodedLink);
-    const catatan = decodeURIComponent(encodedCatatan);
+        async function openModal(rowIndex, encodedStandar, noUrut, encodedBukti, encodedPJ, encodedLink, skor, encodedCatatan) {
+            const currentPokja = document.getElementById('pokjaSelect').value;
+            const standar = decodeURIComponent(encodedStandar);
+            const kelengkapanBukti = decodeURIComponent(encodedBukti);
+            const pj = decodeURIComponent(encodedPJ);
+            const link = decodeURIComponent(encodedLink);
+            const catatan = decodeURIComponent(encodedCatatan);
 
-    document.getElementById('editRowIndex').value = rowIndex;
-    document.getElementById('editPokja').value = currentPokja;
-    document.getElementById('editStandar').value = standar;
-    document.getElementById('editNoUrut').value = noUrut;
-    document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
-    document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
-    document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
-    document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
-    document.getElementById('fileInput').value = '';
-    
-    document.getElementById('modalSubTitle').innerText = `${standar} - EP ${noUrut}`;
+            document.getElementById('editRowIndex').value = rowIndex;
+            document.getElementById('editPokja').value = currentPokja;
+            document.getElementById('editStandar').value = standar;
+            document.getElementById('editNoUrut').value = noUrut;
+            document.getElementById('editKelengkapanBukti').value = kelengkapanBukti !== 'undefined' ? kelengkapanBukti : '';
+            document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
+            document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
+            document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
+            document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
+            document.getElementById('fileInput').value = '';
+            
+            document.getElementById('modalSubTitle').innerText = `${standar} - EP ${noUrut}`;
 
-    const copyBtn = document.getElementById('btnCopyModalLink');
-    if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
-    else copyBtn.classList.add('hidden');
+            const copyBtn = document.getElementById('btnCopyModalLink');
+            if (link && link !== 'undefined') copyBtn.classList.remove('hidden');
+            else copyBtn.classList.add('hidden');
 
-    // =========================================================================
-    // PERBAIKAN DI SINI:
-    // Cek apakah link mengandung tag '#observasi' atau bernilai 'OBSERVASI'
-    // =========================================================================
-    const linkStr = (link && link !== 'undefined') ? link.toString() : "";
-    const isObsSaved = linkStr.includes("#observasi") || linkStr === "OBSERVASI";
-    
-    document.getElementById('editIsObservasi').checked = isObsSaved;
+            const linkStr = (link && link !== 'undefined') ? link.toString() : "";
+            const isObsSaved = linkStr.includes("#observasi") || linkStr === "OBSERVASI";
+            document.getElementById('editIsObservasi').checked = isObsSaved;
 
-    document.getElementById('editModal').classList.remove('hidden');
+            document.getElementById('editModal').classList.remove('hidden');
 
-    loadEPFiles(currentPokja, standar, noUrut);
-}
+            loadEPFiles(currentPokja, standar, noUrut);
+        }
 
         async function loadEPFiles(pokja, standar, noUrut) {
             const container = document.getElementById('fileListContainer');
@@ -561,6 +568,7 @@
                     noUrut: noUrut,
                     files: uploadedFiles,
                     isObservasi: document.getElementById('editIsObservasi').checked,
+                    kelengkapanBukti: document.getElementById('editKelengkapanBukti').value,
                     pj: document.getElementById('editPJ').value,
                     linkDoc: document.getElementById('editLinkDoc').value,
                     skor: document.getElementById('editSkor').value,
