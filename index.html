@@ -241,7 +241,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbx1pSRx6pjko-m6X5ZiNk-JazwogcglDhi3lTIlh2z10fEbEPksDAuzhwSo-Zp8CPDTXg/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycbxbU0b8_5KxBONPMccnQ7jho9jgqNWMaO2BV5jvw9sKxUspnBzO4AKa4_Hmtr-xd1jHQg/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -253,10 +253,12 @@
                 data: {
                     labels: ['TKRS', 'KPS', 'MFK', 'MRMIK', 'AKP', 'HPK', 'PP', 'PAP', 'PAB', 'PKPO', 'KE', 'SKP', 'PROGNAS', 'PMKP', 'PPI'],
                     datasets: [{
-                        label: '% Kepatuhan Skor',
+                        label: '% Kesiapan Berkas & Observasi', // <--- Label dikembalikan ke fungsi aslinya
                         data: Array(15).fill(0),
                         backgroundColor: '#059669',
-                        borderRadius: 6
+                        hoverBackgroundColor: '#047857',
+                        borderRadius: 6,
+                        barPercentage: 0.6
                     }]
                 },
                 options: {
@@ -266,8 +268,14 @@
                         y: {
                             beginAtZero: true,
                             max: 100,
-                            ticks: { callback: (v) => v + "%" }
+                            ticks: { 
+                                stepSize: 20,
+                                callback: (v) => v + "%" 
+                            }
                         }
+                    },
+                    plugins: {
+                        legend: { display: true }
                     }
                 }
             });
