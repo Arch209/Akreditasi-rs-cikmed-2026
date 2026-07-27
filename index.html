@@ -14,13 +14,18 @@
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Menerapkan font Montserrat ke seluruh elemen */
+        /* Menerapkan font Montserrat ke seluruh elemen teks */
         * {
-            font-family: 'Montserrat', sans-serif !important;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* KECUALI untuk Icon FontAwesome agar tidak berubah jadi kotak */
+        .fa, .fas, .far, .fal, .fad, .fab, .fa-solid, .fa-regular, .fa-brands {
+            font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
         }
     </style>
 </head>
-<body class="bg-slate-200 text-slate-800 font-['Montserrat'] min-h-screen flex flex-col justify-between">
+<body class="bg-slate-500 text-slate-800 font-['Montserrat'] min-h-screen flex flex-col justify-between">
 
     <!-- Header Navigation -->
     <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-40">
