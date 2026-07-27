@@ -416,21 +416,21 @@
                         }
 
                         const tr = document.createElement('tr');
-                        tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
+                        tr.className = "hover:bg-slate-50 transition border-b border-slate-100 text-xs md:text-sm";
                         tr.innerHTML = `
-                            <td class="px-4 py-4 font-bold text-slate-900 text-sm md:text-base">${standarRaw || '-'}</td>
-                            <td class="px-3 py-4 text-center font-bold text-sm md:text-base">${noUrut || '-'}</td>
-                            <td class="px-3 py-4 text-center">
-                                <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded border border-blue-200">${metode || '-'}</span>
+                            <td class="px-2 py-3 font-bold text-slate-900 text-xs">${standarRaw || '-'}</td>
+                            <td class="px-1 py-3 text-center font-bold text-xs">${noUrut || '-'}</td>
+                            <td class="px-1 py-3 text-center">
+                                <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-blue-200">${metode || '-'}</span>
                             </td>
-                            <td class="px-6 py-4 text-sm md:text-base font-medium text-slate-800 leading-relaxed min-w-[280px]">${epText}</td>
-                            <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-normal min-w-[220px] bg-emerald-50/20">${formattedBukti}</td>
-                            <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-semibold min-w-[150px]">${formattedPJ}</td>
-                            <td class="px-4 py-4 text-center min-w-[140px]">${dokumenCellHTML}</td>
-                            <td class="px-4 py-4 text-center">${skorBadge}</td>
-                            <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
-                            <td class="px-3 py-4 text-center">
-                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skorUpper}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
+                            <td class="px-3 py-3 text-xs text-slate-800 leading-relaxed font-medium">${epText}</td>
+                            <td class="px-3 py-3 text-xs text-slate-700 leading-relaxed font-normal bg-emerald-50/20">${formattedBukti}</td>
+                            <td class="px-3 py-3 text-xs text-slate-700 leading-relaxed font-semibold">${formattedPJ}</td>
+                            <td class="px-2 py-3 text-center min-w-[100px]">${dokumenCellHTML}</td>
+                            <td class="px-2 py-3 text-center">${skorBadge}</td>
+                            <td class="px-2 py-3 text-xs text-slate-600">${catatan || '-'}</td>
+                            <td class="px-2 py-3 text-center sticky right-0 bg-white hover:bg-slate-50 shadow-l">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skorUpper}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1 transition text-base" title="Edit / Upload">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </td>
