@@ -264,22 +264,39 @@
         
         document.addEventListener("DOMContentLoaded", () => {
             const ctx = document.getElementById('pokjaChart').getContext('2d');
+            
+            // Membuat efek gradient warna air (Emerald ke Transparan)
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(5, 150, 105, 0.55)'); // Emerald agak pekat di atas
+            gradient.addColorStop(1, 'rgba(5, 150, 105, 0.05)'); // Transparan lembut di bawah
+
             pokjaChart = new Chart(ctx, {
-                type: 'bar',
+                type: 'line', // Ganti tipe dari 'bar' ke 'line'
                 data: {
                     labels: ['TKRS', 'KPS', 'MFK', 'MRMIK', 'AKP', 'HPK', 'PP', 'PAP', 'PAB', 'PKPO', 'KE', 'SKP', 'PROGNAS', 'PMKP', 'PPI'],
                     datasets: [{
-                        label: '% Kesiapan Berkas & Observasi', // <--- Label dikembalikan ke fungsi aslinya
+                        label: '% Kesiapan Berkas & Observasi',
                         data: Array(15).fill(0),
-                        backgroundColor: '#059669',
-                        hoverBackgroundColor: '#047857',
-                        borderRadius: 6,
-                        barPercentage: 0.6
+                        borderColor: '#059669',          // Warna garis gelombang utama
+                        borderWidth: 3,                   // Ketebalan garis
+                        backgroundColor: gradient,        // Warna isian air di bawah gelombang
+                        fill: true,                       // Mengaktifkan isian area di bawah garis
+                        tension: 0.45,                    // Kelengkapan lekukan gelombang air (0.4 - 0.5 sangat halus)
+                        pointBackgroundColor: '#059669',  // Warna titik koordinat
+                        pointBorderColor: '#ffffff',     // Pinggiran titik putih
+                        pointBorderWidth: 2,
+                        pointRadius: 4,                   // Ukuran titik Pokja
+                        pointHoverRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    // KONFIGURASI ANIMASI WAVE / GELOMBANG AIR
+                    animation: {
+                        duration: 2000,        // Durasi animasi 2 detik
+                        easing: 'easeInOutQuart' // Efek pergerakan halus seperti gelombang air
+                    },
                     scales: {
                         y: {
                             beginAtZero: true,
