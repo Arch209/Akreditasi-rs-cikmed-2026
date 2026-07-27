@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
@@ -19,7 +20,7 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* KECUALI untuk Icon FontAwesome agar tidak berubah jadi kotak */
+        /* Pengecualian spesifik agar Icon FontAwesome tidak berubah jadi kotak */
         .fa, .fas, .far, .fal, .fad, .fab, .fa-solid, .fa-regular, .fa-brands {
             font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
         }
@@ -39,7 +40,7 @@
             </div>
             
             <div class="flex items-center space-x-2">
-                <button onclick="triggerSyncData()" id="btnSyncHeader" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center space-x-2 transition shadow-sm" title="Sinkronkan File Drive Pokja Ini">
+                <button onclick="triggerSyncData()" id="btnSyncHeader" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-2 rounded-lg font-bold flex items-center space-x-2 transition shadow-sm cursor-pointer" title="Sinkronkan File Drive Pokja Ini">
                     <i class="fa-solid fa-rotate text-sm" id="syncIcon"></i>
                     <span class="hidden md:inline">Sinkron Data</span>
                 </button>
@@ -60,7 +61,7 @@
     <main class="max-w-[98%] mx-auto px-4 py-6 space-y-6 w-full flex-grow">
 
         <!-- DASHBOARD RINGKASAN KESIAPAN BERDASARKAN SKOR -->
-        <section class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 p-5 md:p-6 space-y-5">
+        <section class="bg-white rounded-2xl shadow-xl shadow-slate-300/50 border border-slate-200 p-5 md:p-6 space-y-5">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-lg md:text-xl font-bold text-slate-900">Dashboard Kepatuhan & Skor Akreditasi</h2>
@@ -110,7 +111,7 @@
         </section>
 
         <!-- SELEKSI POKJA & TABEL ELEMEN PENILAIAN -->
-        <section class="bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-200 p-5 md:p-6 space-y-5">
+        <section class="bg-white rounded-2xl shadow-xl shadow-slate-300/50 border border-slate-200 p-5 md:p-6 space-y-5">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
                 <div>
                     <h3 class="text-base md:text-lg font-bold text-slate-900">Detail Elemen Penilaian (EP)</h3>
@@ -141,7 +142,7 @@
 
             <div class="overflow-x-auto rounded-xl border border-slate-200">
                 <table class="w-full text-sm text-left text-slate-600">
-                    <thead class="text-xs font-bold text-slate-800 uppercase bg-slate-50 border-b border-slate-200 sticky top-0 z-10">
+                    <thead class="text-xs font-bold text-slate-800 uppercase bg-slate-100 border-b border-slate-200 sticky top-0 z-10">
                         <tr>
                             <th class="px-2 py-3 w-20">STANDAR</th>
                             <th class="px-1 py-3 text-center w-10">NO</th>
@@ -172,7 +173,7 @@
                     <h4 class="font-bold text-slate-900 text-base" id="modalTitle">Edit & Upload Dokumen EP</h4>
                     <p class="text-[11px] text-emerald-600 font-semibold" id="modalSubTitle">-</p>
                 </div>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
             <form id="editForm" onsubmit="submitForm(event)" class="space-y-4 text-xs">
@@ -209,7 +210,7 @@
                 <div>
                     <div class="flex justify-between items-center mb-1">
                         <label class="font-bold text-slate-700 block">Link Folder Google Drive</label>
-                        <button type="button" id="btnCopyModalLink" onclick="copyLinkFromModal()" class="text-emerald-600 hover:underline text-[11px] font-bold hidden">
+                        <button type="button" id="btnCopyModalLink" onclick="copyLinkFromModal()" class="text-emerald-600 hover:underline text-[11px] font-bold hidden cursor-pointer">
                             <i class="fa-regular fa-copy"></i> Salin Link Folder
                         </button>
                     </div>
@@ -218,7 +219,7 @@
 
                 <div>
                     <label class="font-bold text-slate-700 block mb-1">Skor Penilaian</label>
-                    <select id="editSkor" class="w-full p-2.5 rounded-lg border border-slate-300 font-semibold">
+                    <select id="editSkor" class="w-full p-2.5 rounded-lg border border-slate-300 font-semibold cursor-pointer">
                         <option value="0">0 - Belum Terpenuhi</option>
                         <option value="5">5 - Terpenuhi Sebagian</option>
                         <option value="10">10 - Terpenuhi Lengkap</option>
@@ -240,8 +241,8 @@
                 </div>
 
                 <div class="flex justify-end space-x-2 pt-2 border-t border-slate-100">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200">Batal</button>
-                    <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center space-x-2">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-slate-200 cursor-pointer">Batal</button>
+                    <button type="submit" id="btnSave" class="px-4 py-2 rounded-lg bg-emerald-600 text-white font-semibold hover:bg-emerald-700 flex items-center space-x-2 cursor-pointer">
                         <span>Simpan Perubahan</span>
                     </button>
                 </div>
@@ -249,7 +250,7 @@
         </div>
     </div>
 
-    <footer class="text-center py-4 border-t border-slate-200 text-xs text-slate-400 w-full bg-white">
+    <footer class="text-center py-4 border-t border-slate-300 text-xs text-slate-500 w-full bg-slate-200 font-medium">
         &copy; 2026 IT RS Cikarang Medika. All Rights Reserved.
     </footer>
 
@@ -259,6 +260,7 @@
 
         let currentPokjaData = [];
         let pokjaChart;
+
         // Terapkan font Montserrat pada Chart.js
         Chart.defaults.font.family = "'Montserrat', sans-serif";
         
@@ -269,7 +271,7 @@
                 data: {
                     labels: ['TKRS', 'KPS', 'MFK', 'MRMIK', 'AKP', 'HPK', 'PP', 'PAP', 'PAB', 'PKPO', 'KE', 'SKP', 'PROGNAS', 'PMKP', 'PPI'],
                     datasets: [{
-                        label: '% Kesiapan Berkas & Observasi', // <--- Label dikembalikan ke fungsi aslinya
+                        label: '% Kesiapan Berkas & Observasi',
                         data: Array(15).fill(0),
                         backgroundColor: '#059669',
                         hoverBackgroundColor: '#047857',
@@ -298,6 +300,11 @@
 
             loadDashboard();
             loadPokja("TKRS");
+
+            // Realtime Auto-Polling (Pembaruan Otomatis Dashboard Setiap 15 Detik)
+            setInterval(() => {
+                loadDashboard();
+            }, 15000);
         });
 
         async function loadDashboard() {
@@ -329,16 +336,16 @@
             
             tbody.innerHTML = Array(4).fill(0).map(() => `
                 <tr class="animate-pulse border-b border-slate-100">
-                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
-                    <td class="px-3 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-6 mx-auto"></div></td>
-                    <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-8 mx-auto"></div></td>
-                    <td class="px-6 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div></td>
-                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
-                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
-                    <td class="px-4 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-16 mx-auto"></div></td>
-                    <td class="px-4 py-4 text-center"><div class="h-6 bg-slate-200 rounded-full w-8 mx-auto"></div></td>
-                    <td class="px-4 py-4"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
-                    <td class="px-3 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-5 mx-auto"></div></td>
+                    <td class="px-2 py-4"><div class="h-4 bg-slate-200 rounded w-12"></div></td>
+                    <td class="px-1 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-6 mx-auto"></div></td>
+                    <td class="px-1 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-8 mx-auto"></div></td>
+                    <td class="px-3 py-4"><div class="h-4 bg-slate-200 rounded w-full mb-1"></div></td>
+                    <td class="px-3 py-4"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
+                    <td class="px-3 py-4"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                    <td class="px-2 py-4 text-center"><div class="h-4 bg-slate-200 rounded w-16 mx-auto"></div></td>
+                    <td class="px-2 py-4 text-center"><div class="h-6 bg-slate-200 rounded-full w-8 mx-auto"></div></td>
+                    <td class="px-2 py-4"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
+                    <td class="px-2 py-4 text-center"><div class="h-5 bg-slate-200 rounded w-5 mx-auto"></div></td>
                 </tr>
             `).join('');
 
@@ -392,7 +399,7 @@
                                         <a href="${linkStr}" target="_blank" class="text-xs text-emerald-600 font-bold hover:underline inline-flex items-center space-x-1">
                                             <i class="fa-solid fa-folder-open text-[10px]"></i><span>Folder</span>
                                         </a>
-                                        <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-[10px] p-0.5" title="Salin Link">
+                                        <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-[10px] p-0.5 cursor-pointer" title="Salin Link">
                                             <i class="fa-regular fa-copy"></i>
                                         </button>
                                     </div>
@@ -404,7 +411,7 @@
                                     <a href="${linkStr}" target="_blank" class="inline-flex items-center space-x-1 text-xs md:text-sm text-emerald-600 font-bold hover:underline">
                                         <i class="fa-solid fa-folder-open"></i><span>Buka Folder</span>
                                     </a>
-                                    <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1" title="Salin Link Folder">
+                                    <button onclick="copyToClipboard('${linkStr}')" class="text-slate-400 hover:text-emerald-600 text-xs p-1 cursor-pointer" title="Salin Link Folder">
                                         <i class="fa-regular fa-copy"></i>
                                     </button>
                                 </div>
@@ -418,7 +425,7 @@
                         }
 
                         // BADGE WARNA SKOR (10, 5, 0, TDD)
-                        let skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-slate-100 text-slate-600">0</span>`;
+                        let skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-rose-100 text-rose-800 border border-rose-200">0</span>`;
                         const skorUpper = skor ? skor.toString().trim().toUpperCase() : "0";
 
                         if (skorUpper === "10") {
@@ -427,8 +434,6 @@
                             skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-amber-100 text-amber-800 border border-amber-300">5</span>`;
                         } else if (skorUpper === "TDD") {
                             skorBadge = `<span class="font-bold px-2.5 py-1 rounded-full text-[11px] bg-slate-200 text-slate-700 border border-slate-300">TDD</span>`;
-                        } else {
-                            skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-rose-100 text-rose-800 border border-rose-200">0</span>`;
                         }
 
                         const tr = document.createElement('tr');
@@ -446,7 +451,7 @@
                             <td class="px-2 py-3 text-center">${skorBadge}</td>
                             <td class="px-2 py-3 text-xs text-slate-600">${catatan || '-'}</td>
                             <td class="px-2 py-3 text-center sticky right-0 bg-white hover:bg-slate-50 shadow-l">
-                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skorUpper}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1 transition text-base" title="Edit / Upload">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skorUpper}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1 transition text-base cursor-pointer" title="Edit / Upload">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </td>
@@ -544,7 +549,7 @@
                             <i class="fa-regular fa-file-pdf text-rose-500"></i>
                             <span class="truncate">${f.name}</span>
                         </a>
-                        <button type="button" onclick="deleteFile('${f.id}', '${f.name}')" class="text-slate-400 hover:text-rose-600 p-1 transition" title="Hapus File Ini">
+                        <button type="button" onclick="deleteFile('${f.id}', '${f.name}')" class="text-slate-400 hover:text-rose-600 p-1 transition cursor-pointer" title="Hapus File Ini">
                             <i class="fa-solid fa-xmark font-bold text-sm"></i>
                         </button>
                     `;
