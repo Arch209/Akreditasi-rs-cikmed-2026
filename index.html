@@ -45,16 +45,48 @@
 
     <main class="max-w-7xl mx-auto px-4 py-6 space-y-6 w-full flex-grow">
 
-        <!-- DASHBOARD RINGKASAN KESIAPAN -->
-        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <!-- DASHBOARD RINGKASAN KESIAPAN BERDASARKAN SKOR -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-6 space-y-5">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-lg md:text-xl font-bold text-slate-900">Dashboard Kesiapan Akreditasi</h2>
-                    <p class="text-xs text-slate-500">Persentase progres kelengkapan dokumen elemen penilaian per Pokja</p>
+                    <h2 class="text-lg md:text-xl font-bold text-slate-900">Dashboard Kepatuhan & Skor Akreditasi</h2>
+                    <p class="text-xs text-slate-500">Capaian persentase skor elemen penilaian STARKES per Pokja (Skor 10, 5, 0, TDD)</p>
                 </div>
                 <div class="bg-emerald-50 border border-emerald-200 rounded-xl px-5 py-2.5 text-center w-full md:w-auto">
-                    <span class="text-[10px] md:text-xs text-emerald-700 font-bold block uppercase tracking-wider">Total Kesiapan</span>
+                    <span class="text-[10px] md:text-xs text-emerald-700 font-bold block uppercase tracking-wider">Capaian Kepatuhan Total</span>
                     <span id="totalPercentage" class="text-2xl font-black text-emerald-600">0.0%</span>
+                </div>
+            </div>
+
+            <!-- KARTU RINGKASAN REKAP SKOR STARKES -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-emerald-700 uppercase">Terpenuhi (10)</p>
+                        <h3 id="statCount10" class="text-xl font-black text-emerald-800">0</h3>
+                    </div>
+                    <i class="fa-solid fa-circle-check text-2xl text-emerald-500/40"></i>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-amber-700 uppercase">Sebagian (5)</p>
+                        <h3 id="statCount5" class="text-xl font-black text-amber-800">0</h3>
+                    </div>
+                    <i class="fa-solid fa-circle-half-stroke text-2xl text-amber-500/40"></i>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 p-3.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-rose-700 uppercase">Belum Terpenuhi (0)</p>
+                        <h3 id="statCount0" class="text-xl font-black text-rose-800">0</h3>
+                    </div>
+                    <i class="fa-solid fa-circle-xmark text-2xl text-rose-500/40"></i>
+                </div>
+                <div class="bg-slate-100 border border-slate-300 p-3.5 rounded-xl flex items-center justify-between">
+                    <div>
+                        <p class="text-[11px] font-bold text-slate-600 uppercase">TDD (Tidak Derapkan)</p>
+                        <h3 id="statCountTDD" class="text-xl font-black text-slate-700">0</h3>
+                    </div>
+                    <i class="fa-solid fa-ban text-2xl text-slate-400/40"></i>
                 </div>
             </div>
 
@@ -101,7 +133,7 @@
                             <th class="px-3 py-3 text-center">No</th>
                             <th class="px-3 py-3 text-center">Metode</th>
                             <th class="px-6 py-3 min-w-[280px]">Elemen Penilaian (EP)</th>
-                            <th class="px-4 py-3 min-w-[220px]">Kelengkapan Bukti</th> <!-- KOLOM BARU -->
+                            <th class="px-4 py-3 min-w-[220px]">Kelengkapan Bukti</th>
                             <th class="px-4 py-3 min-w-[150px]">Penanggung Jawab</th>
                             <th class="px-4 py-3 text-center min-w-[140px]">Dokumen</th>
                             <th class="px-4 py-3 text-center">Skor</th>
@@ -110,7 +142,7 @@
                         </tr>
                     </thead>
                     <tbody id="epTableBody" class="divide-y divide-slate-200">
-                        <!-- Skeleton loading -->
+                        <!-- Skeleton loading disuntikkan via JS -->
                     </tbody>
                 </table>
             </div>
@@ -173,10 +205,10 @@
                 <div>
                     <label class="font-bold text-slate-700 block mb-1">Skor Penilaian</label>
                     <select id="editSkor" class="w-full p-2.5 rounded-lg border border-slate-300 font-semibold">
-                        <option value="TDD">TDD - Tidak Dapat Diterapkan</option>
                         <option value="0">0 - Belum Terpenuhi</option>
                         <option value="5">5 - Terpenuhi Sebagian</option>
                         <option value="10">10 - Terpenuhi Lengkap</option>
+                        <option value="TDD">TDD - Tidak Dapat Diterapkan</option>
                     </select>
                 </div>
 
@@ -209,7 +241,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycby89dSphSeyWCDl-T9GEa8xS8G8YADNqEbruSXfkL7Rhx8N2bFqUhN4LvE_XuW6k4S_Lg/exec";
+        const API_URL = "https://script.google.com/macros/s/AKfycby93lg2rPdazlf-0zT7JyS3e0q7lN0hBBTtvYgF7Nu9JOmi0_YygKdrV23o3L2PzgW8tg/exec";
 
         let currentPokjaData = [];
         let pokjaChart;
@@ -221,7 +253,7 @@
                 data: {
                     labels: ['TKRS', 'KPS', 'MFK', 'MRMIK', 'AKP', 'HPK', 'PP', 'PAP', 'PAB', 'PKPO', 'KE', 'SKP', 'PROGNAS', 'PMKP', 'PPI'],
                     datasets: [{
-                        label: '% Kelengkapan',
+                        label: '% Kepatuhan Skor',
                         data: Array(15).fill(0),
                         backgroundColor: '#059669',
                         borderRadius: 6
@@ -249,14 +281,19 @@
                 const res = await fetch(`${API_URL}?action=getDashboard`);
                 const data = await res.json();
                 
-                if (Array.isArray(data)) {
-                    const percentages = data.map(r => (parseFloat(r[1] || 0) * 100).toFixed(1));
+                if (data && data.pokjaData) {
+                    const percentages = data.pokjaData.map(r => r.percentage);
                     pokjaChart.data.datasets[0].data = percentages;
                     pokjaChart.update();
 
-                    const total = percentages.reduce((a, b) => parseFloat(a) + parseFloat(b), 0);
-                    const avg = (total / percentages.length).toFixed(1);
-                    document.getElementById('totalPercentage').innerText = `${avg}%`;
+                    document.getElementById('totalPercentage').innerText = `${data.overallPercentage || 0.0}%`;
+
+                    if (data.totalSummary) {
+                        document.getElementById('statCount10').innerText = data.totalSummary.count10 || 0;
+                        document.getElementById('statCount5').innerText = data.totalSummary.count5 || 0;
+                        document.getElementById('statCount0').innerText = data.totalSummary.count0 || 0;
+                        document.getElementById('statCountTDD').innerText = data.totalSummary.countTDD || 0;
+                    }
                 }
             } catch (err) {
                 console.error("Gagal memuat dashboard:", err);
@@ -299,12 +336,12 @@
                     const noUrut = row[1];
                     const metode = row[2];
                     const epText = row[3];
-                    const kelengkapanBukti = row[4]; // Kolom E (Kelengkapan Bukti)
-                    const pjText = row[5];           // Kolom F (PJ)
-                    const isChecklist = row[6];      // Kolom G (Checklist)
-                    const linkDoc = row[7];          // Kolom H (Link Folder)
-                    const skor = row[8];             // Kolom I (Skor)
-                    const catatan = row[9];          // Kolom J (Catatan)
+                    const kelengkapanBukti = row[4]; 
+                    const pjText = row[5];           
+                    const isChecklist = row[6];      
+                    const linkDoc = row[7];          
+                    const skor = row[8];             
+                    const catatan = row[9];          
 
                     if (standarRaw && standarRaw !== "-" && standarRaw.toString().trim() !== "") {
                         activeStandar = standarRaw.toString().trim();
@@ -356,6 +393,20 @@
                             `;
                         }
 
+                        // BADGE WARNA SKOR (10, 5, 0, TDD)
+                        let skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-slate-100 text-slate-600">0</span>`;
+                        const skorUpper = skor ? skor.toString().trim().toUpperCase() : "0";
+
+                        if (skorUpper === "10") {
+                            skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-emerald-100 text-emerald-800 border border-emerald-300">10</span>`;
+                        } else if (skorUpper === "5") {
+                            skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-amber-100 text-amber-800 border border-amber-300">5</span>`;
+                        } else if (skorUpper === "TDD") {
+                            skorBadge = `<span class="font-bold px-2.5 py-1 rounded-full text-[11px] bg-slate-200 text-slate-700 border border-slate-300">TDD</span>`;
+                        } else {
+                            skorBadge = `<span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm bg-rose-100 text-rose-800 border border-rose-200">0</span>`;
+                        }
+
                         const tr = document.createElement('tr');
                         tr.className = "hover:bg-slate-50 transition border-b border-slate-100";
                         tr.innerHTML = `
@@ -368,12 +419,10 @@
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-normal min-w-[220px] bg-emerald-50/20">${formattedBukti}</td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-700 leading-relaxed font-semibold min-w-[150px]">${formattedPJ}</td>
                             <td class="px-4 py-4 text-center min-w-[140px]">${dokumenCellHTML}</td>
-                            <td class="px-4 py-4 text-center">
-                                <span class="font-bold px-3 py-1 rounded-full text-xs md:text-sm ${skor == 10 ? 'bg-emerald-100 text-emerald-800' : skor == 5 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600'}">${skor !== "" ? skor : 0}</span>
-                            </td>
+                            <td class="px-4 py-4 text-center">${skorBadge}</td>
                             <td class="px-4 py-4 text-xs md:text-sm text-slate-600">${catatan || '-'}</td>
                             <td class="px-3 py-4 text-center">
-                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skor}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
+                                <button onclick="openModal(${idx + 6}, '${encodeURIComponent(currentStandarForThisRow)}', '${noUrut}', '${encodeURIComponent(kelengkapanBukti || '')}', '${encodeURIComponent(pjText || '')}', '${encodeURIComponent(linkDoc || '')}', '${skorUpper}', '${encodeURIComponent(catatan || '')}')" class="text-slate-400 hover:text-emerald-600 p-1.5 transition text-base" title="Edit / Upload">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                             </td>
@@ -430,7 +479,7 @@
             document.getElementById('editKelengkapanBukti').value = kelengkapanBukti !== 'undefined' ? kelengkapanBukti : '';
             document.getElementById('editPJ').value = pj !== 'undefined' ? pj : '';
             document.getElementById('editLinkDoc').value = link !== 'undefined' ? link : '';
-            document.getElementById('editSkor').value = skor !== 'undefined' ? skor : '0';
+            document.getElementById('editSkor').value = (skor && skor !== 'undefined') ? skor : '0';
             document.getElementById('editCatatan').value = catatan !== 'undefined' ? catatan : '';
             document.getElementById('fileInput').value = '';
             
